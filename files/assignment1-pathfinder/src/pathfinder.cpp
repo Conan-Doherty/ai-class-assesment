@@ -86,10 +86,23 @@ int main()
     DrawCircleV(node_info[end], node_radius, RED);
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
+       
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
         // *opt is a node_t
           player_path.push_back(*opt);
+
+          /*for (const node_t& i : player_path) {
+              if (opt = i) {
+                  
+              }
+              else {
+                  player_path.push_back(*opt);
+                  
+              }
+         }
+          */
+          
          
           
          
@@ -99,8 +112,11 @@ int main()
     
     int size = player_path.size();
     int i;
-    for (const node_t& i : player_path) {
-        DrawCircleV(node_info['i'], node_radius, BLUE);
+    for (size_t i = 1; i < player_path.size(); i++)
+    {
+        
+        DrawLineEx(node_info[player_path[i - 1]], node_info[player_path[i]], line_thickness, BLUE);
+        DrawCircleV(node_info[player_path[i-1]], node_radius, BLUE);
     }
     EndDrawing();
   }
