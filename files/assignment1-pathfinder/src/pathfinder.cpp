@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-
 std::vector<node_t> astar_pathfind(const Graph& g, node_t start, node_t goal)
 {
   std::unordered_map<node_t, node_t> came_from;
@@ -62,8 +61,12 @@ int main()
 
   int t{60}; // time
   std::vector<node_t> player_path{};
-  node_t start = 'A';
-  node_t end   = 'G';
+  srand(time(0));
+  node_t start = 'A' + (rand() % 5);
+
+
+  node_t end = 'D' + (rand() % 3);
+
   
   int tokens{2000}, score{}, high_score{}; // try with more/less tokens?
 
@@ -79,21 +82,29 @@ int main()
     DrawText(TextFormat("Tokens: %d", tokens), 10, 40, 20, BLACK);
     DrawText(TextFormat("High Score: %d", high_score), 10, 70, 20, BLACK);
     DrawText(TextFormat("Time: %d", t), 10, 100, 20, BLACK);
-    DrawCircleV(node_info['A'], node_radius, GREEN);
-    DrawCircleV(node_info['G'], node_radius, RED);
+    DrawCircleV(node_info[start], node_radius, GREEN);
+    DrawCircleV(node_info[end], node_radius, RED);
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
         // *opt is a node_t
-          //DrawCircleV(node_info['opt'], node_radius, BLUE);
+          player_path.push_back(*opt);
+         
+          
+         
 
       }
     }
-
+    
+    int size = player_path.size();
+    int i;
+    for (const node_t& i : player_path) {
+        DrawCircleV(node_info['i'], node_radius, BLUE);
+    }
     EndDrawing();
   }
-
+  
   return 0;
 }
 

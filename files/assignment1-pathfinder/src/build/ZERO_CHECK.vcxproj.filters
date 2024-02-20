@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\B00414663\Documents\GitHub\ai-class-assesment\files\assignment1-pathfinder\src\build\CMakeFiles\5590a5a0fac377e67393146d23ee3ce7\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1F3E1444-B5EE-3DD3-A0B0-F3AE93C239EE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
