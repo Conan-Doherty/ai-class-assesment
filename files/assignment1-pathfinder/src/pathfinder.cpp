@@ -34,7 +34,8 @@ unsigned int path_cost(const std::vector<node_t>& path)
 
 int main()
 {
-  const int w{ 2880 }, h{ 1620 }, half_w{ w/2 }, half_h{ h/2 }, gap{ w/8 };
+    
+  const int w{ 960 }, h{ 540 }, half_w{ w/2 }, half_h{ h/2 }, gap{ w/8 };
   raylib::Window window{ w, h, "Pathfinder" };
 
   SetTargetFPS(60);
@@ -63,6 +64,7 @@ int main()
   std::vector<node_t> player_path{};
   node_t start = 'A';
   node_t end   = 'G';
+  
   int tokens{2000}, score{}, high_score{}; // try with more/less tokens?
 
   while (!window.ShouldClose()) // Detect window close button or ESC key
@@ -72,12 +74,20 @@ int main()
     ClearBackground(LIGHTGRAY);
 
     draw_graph(g);
-
+   
+    DrawText(TextFormat("Score: %d", score), 10, 10, 20, BLACK);
+    DrawText(TextFormat("Tokens: %d", tokens), 10, 40, 20, BLACK);
+    DrawText(TextFormat("High Score: %d", high_score), 10, 70, 20, BLACK);
+    DrawText(TextFormat("Time: %d", t), 10, 100, 20, BLACK);
+    DrawCircleV(node_info['A'], node_radius, GREEN);
+    DrawCircleV(node_info['G'], node_radius, RED);
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
         // *opt is a node_t
+          //DrawCircleV(node_info['opt'], node_radius, BLUE);
+
       }
     }
 
