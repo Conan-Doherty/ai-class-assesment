@@ -33,7 +33,8 @@ unsigned int path_cost(const std::vector<node_t>& path)
 
 int main()
 {
-    
+    InitAudioDevice();
+    Sound clickSound = LoadSound(".. / .. / deps / raylib - cpp - 5.0.1 / examples / audio / resources / coin.wav");
   const int w{ 960 }, h{ 540 }, half_w{ w/2 }, half_h{ h/2 }, gap{ w/8 };
   raylib::Window window{ w, h, "Pathfinder" };
 
@@ -87,9 +88,12 @@ int main()
     DrawCircleV(node_info[end], node_radius, RED);
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-       
+        
+
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
+          PlaySound(clickSound);
+
           int size = player_path.size();
           int i;
         // *opt is a node_t
@@ -98,14 +102,26 @@ int main()
               player_path.push_back(start);
           }
 
-
-          neighbors = g.neighbors(player_path.back());
-          for (i = 0; i < neighbors.size(); i++)
-          {
-              if (*opt == neighbors[i]) {
-                  player_path.push_back(*opt);
+          else {
+              if (*opt == player_path.back()) {
+                  node_t t = player_path.back();
+                  player_path.pop_back();
+                  tokens = tokens + static_cast<unsigned int>(g.cost(player_path.back(), t ));
+              }
+              else
+              {
+                  neighbors = g.neighbors(player_path.back());
+                  for (i = 0; i < neighbors.size(); i++)
+                  {
+                      if (*opt == neighbors[i]) {
+                          tokens = tokens - static_cast<unsigned int>(g.cost(player_path.back(), *opt));
+                          player_path.push_back(*opt);
+                      }
+                  }
               }
           }
+
+
 
           /*for (const node_t& i : player_path) {
               if (opt = i) {
@@ -125,11 +141,12 @@ int main()
     }
 
 
-    for (size_t i = 1; i < player_path.size(); i++)
+    for (size_t i = 0; i < player_path.size(); i++)
     {
-        
-        DrawLineEx(node_info[player_path[i - 1]], node_info[player_path[i]], line_thickness, BLUE);
-        DrawCircleV(node_info[player_path[i-1]], node_radius, BLUE);
+        if (i > 0) {
+            DrawLineEx(node_info[player_path[i - 1]], node_info[player_path[i]], line_thickness, BLUE);
+        }
+        DrawCircleV(node_info[player_path[i]], node_radius, BLUE);
     }
     EndDrawing();
   }
