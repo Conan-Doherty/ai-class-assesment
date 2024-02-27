@@ -61,6 +61,7 @@ int main()
 
   int t{60}; // time
   std::vector<node_t> player_path{};
+  std::vector<node_t> neighbors{};
   srand(time(0));
   node_t start = 'A' + (rand() % 5);
 
@@ -89,8 +90,22 @@ int main()
        
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
+          int size = player_path.size();
+          int i;
         // *opt is a node_t
-          player_path.push_back(*opt);
+          if (player_path.size() == 0) {
+
+              player_path.push_back(start);
+          }
+
+
+          neighbors = g.neighbors(player_path.back());
+          for (i = 0; i < neighbors.size(); i++)
+          {
+              if (*opt == neighbors[i]) {
+                  player_path.push_back(*opt);
+              }
+          }
 
           /*for (const node_t& i : player_path) {
               if (opt = i) {
@@ -103,15 +118,13 @@ int main()
          }
           */
           
-         
-          
+
          
 
       }
     }
-    
-    int size = player_path.size();
-    int i;
+
+
     for (size_t i = 1; i < player_path.size(); i++)
     {
         
