@@ -34,7 +34,9 @@ unsigned int path_cost(const std::vector<node_t>& path)
 int main()
 {
     InitAudioDevice();
-    Sound clickSound = LoadSound(".. / .. / deps / raylib - cpp - 5.0.1 / examples / audio / resources / coin.wav");
+    Sound GetTarget = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/coin.wav");
+    Sound RemoveTarget = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/spring.wav");
+    //Resets whenever other sound is use, figure out later. Sound BGM = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/country.mp3");
   const int w{ 960 }, h{ 540 }, half_w{ w/2 }, half_h{ h/2 }, gap{ w/8 };
   raylib::Window window{ w, h, "Pathfinder" };
 
@@ -63,13 +65,15 @@ int main()
   int t{60}; // time
   std::vector<node_t> player_path{};
   std::vector<node_t> neighbors{};
+  std::vector<node_t> Perfect_Path{};
+
   srand(time(0));
-  node_t start = 'A' + (rand() % 5);
+  node_t start = 'A' + (rand() % 3);
 
 
-  node_t end = 'D' + (rand() % 3);
+  node_t end = 'D' + (rand() % 4);
 
-  
+
   int tokens{2000}, score{}, high_score{}; // try with more/less tokens?
 
   while (!window.ShouldClose()) // Detect window close button or ESC key
@@ -88,11 +92,11 @@ int main()
     DrawCircleV(node_info[end], node_radius, RED);
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        
+        //PlaySound(BGM);
 
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
-          PlaySound(clickSound);
+          
 
           int size = player_path.size();
           int i;
@@ -100,6 +104,7 @@ int main()
           if (player_path.size() == 0) {
 
               player_path.push_back(start);
+              PlaySound(GetTarget);
           }
 
           else {
@@ -107,6 +112,7 @@ int main()
                   node_t t = player_path.back();
                   player_path.pop_back();
                   tokens = tokens + static_cast<unsigned int>(g.cost(player_path.back(), t ));
+                  PlaySound(RemoveTarget);
               }
               else
               {
@@ -116,23 +122,24 @@ int main()
                       if (*opt == neighbors[i]) {
                           tokens = tokens - static_cast<unsigned int>(g.cost(player_path.back(), *opt));
                           player_path.push_back(*opt);
+                          PlaySound(GetTarget);
+                      }
+                      if (*opt == neighbors[i] && *opt == end) {
+                          tokens = tokens + 300;
+                          Perfect_Path = astar_pathfind(g, start, end);
+                          score = score + path_cost(Perfect_Path);
+
+                          player_path.clear();
+
+                          
+                          start = 'A' + (rand() % 3);
+                          end = 'D' + (rand() % 4);
                       }
                   }
               }
           }
-
-
-
-          /*for (const node_t& i : player_path) {
-              if (opt = i) {
-                  
-              }
-              else {
-                  player_path.push_back(*opt);
-                  
-              }
-         }
-          */
+          
+          
           
 
          
