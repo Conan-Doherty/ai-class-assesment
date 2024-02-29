@@ -63,6 +63,7 @@ int main()
   add_double_edge(g, 'F', 'G');
 
   int t{60}; // time
+  float float_time{ 60 };
   std::vector<node_t> player_path{};
   std::vector<node_t> neighbors{};
   std::vector<node_t> Perfect_Path{};
@@ -75,6 +76,8 @@ int main()
 
 
   int tokens{2000}, score{}, high_score{}; // try with more/less tokens?
+
+
 
   while (!window.ShouldClose()) // Detect window close button or ESC key
   {
@@ -90,6 +93,23 @@ int main()
     DrawText(TextFormat("Time: %d", t), 10, 100, 20, BLACK);
     DrawCircleV(node_info[start], node_radius, GREEN);
     DrawCircleV(node_info[end], node_radius, RED);
+
+    if (t > 0) {
+        float_time -= GetFrameTime();
+        t = float_time;
+    }
+    else {
+        if (high_score < score) {
+            high_score = score;
+        }
+        score = 0;
+        t = 60;
+        float_time = 60;
+        tokens = 2000;
+        start = 'A' + (rand() % 3);
+        end = 'D' + (rand() % 4);
+    }
+
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         //PlaySound(BGM);
