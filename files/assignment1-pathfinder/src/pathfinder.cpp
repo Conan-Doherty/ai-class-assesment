@@ -36,6 +36,8 @@ int main()
     InitAudioDevice();
     Sound GetTarget = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/coin.wav");
     Sound RemoveTarget = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/spring.wav");
+    Sound GameOverSound = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/weird.wav");
+
     //Resets whenever other sound is use, figure out later. Sound BGM = LoadSound("../../deps/raylib-cpp-5.0.1/examples/audio/resources/country.mp3");
   const int w{ 960 }, h{ 540 }, half_w{ w/2 }, half_h{ h/2 }, gap{ w/8 };
   raylib::Window window{ w, h, "Pathfinder" };
@@ -99,6 +101,7 @@ int main()
         t = float_time;
     }
     else {
+        PlaySound(GameOverSound);
         if (high_score < score) {
             high_score = score;
         }
@@ -156,6 +159,7 @@ int main()
                           end = 'D' + (rand() % 4);
                       }
                       if (*opt == neighbors[i] && *opt == end && tokens <= 0) {
+                          PlaySound(GameOverSound);
                           if (high_score < score) {
                               high_score = score;
                           }
