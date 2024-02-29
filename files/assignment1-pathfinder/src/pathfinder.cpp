@@ -155,6 +155,17 @@ int main()
                           start = 'A' + (rand() % 3);
                           end = 'D' + (rand() % 4);
                       }
+                      if (*opt == neighbors[i] && *opt == end && tokens <= 0) {
+                          if (high_score < score) {
+                              high_score = score;
+                          }
+
+                          player_path.clear();
+
+
+                          start = 'A' + (rand() % 3);
+                          end = 'D' + (rand() % 4);
+                      }
                   }
               }
           }
