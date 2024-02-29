@@ -112,7 +112,7 @@ int main()
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        //PlaySound(BGM);
+        
 
       if (auto opt = get_nearby_node(GetMousePosition()))
       {
