@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
       }
     }
   }
-  
+  /*
   // Randomly choose an image, and remove it from the main collection
   std::srand(std::time(0));
   int rand_image_id = std::rand() % images.size();
@@ -60,21 +60,34 @@ int main(int argc, char *argv[])
   labels.erase(labels.begin() + rand_image_id);
   std::cout << "Actual class    = " << testLabel << '\n';
   std::cout << " training...";
-  
+  */
+
   cv::Ptr<cv::face::BasicFaceRecognizer> model = cv::face::EigenFaceRecognizer::create();
   model->train(images, labels);
-  int predictedLabel = model->predict(testSample);
-  std::cout << "\nPredicted class = " << predictedLabel << '\n';
+
+
+  //int predictedLabel = model->predict(testSample);
+  //std::cout << "\nPredicted class = " << predictedLabel << '\n';
   
   
   cv::Point p1(260, 180);
-  cv::Point p2(260+91, 180+112);
+  cv::Point p2(260+184, 180+224);
   cv::namedWindow(win_name);
   while (1) {
       
       
       vid_in >> frame;
+      Mat roi(frame,Rect(260, 180, 184, 224));
       rectangle(frame, p1, p2, Scalar(0, 255, 0));
+      //int predictedLabel = model->predict(roi);
+    //  std::cout << "\nPredicted class = " << predictedLabel << '\n';
+      Mat greyroi;
+      cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
+      Mat resized;
+      resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
+      int predictedLabel = model->predict(resized);
+      std::cout << "face is predicted to be from folder....." << predictedLabel << "\n"<<std::endl;
+     // std::cout << "\nPredicted class = " << predictedLabel << '\n';
       //cv::flip(frame, flippedimage,1);
       imshow(win_name, frame);
       if (cv::waitKey(60 / fps) >= 0) // how long to wait for a key (milliseconds)
