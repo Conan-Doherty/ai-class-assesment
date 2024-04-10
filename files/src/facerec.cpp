@@ -2,7 +2,7 @@
 #include "opencv2/face.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
-#include "opencv2/core/utils/logger.hpp" // utils::logging::LOG_LEVEL_WARNING
+#include "opencv2/core/utils/logger.hpp"// utils::logging::LOG_LEVEL_WARNING
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -10,10 +10,35 @@ using namespace cv;
 using namespace std;
 //g++ -std=c++17 facerec.cpp -lopencv_face -lopencv_core -lopencv_imgcodecs
 
+int width = 184;
+int height = 224;
+
+cv::Point p1(0,0);
+cv::Point p2(width,height);
+
+bool dragOn = false;
+void onMouse(int event,int x,int y, int,void*) 
+{
+    if (event == EVENT_LBUTTONDOWN) {
+        dragOn = true;
+    }
+    else if (event == EVENT_LBUTTONUP) {
+        dragOn = false;
+    }
+    if (dragOn) {
+        int wherex = x - (p2.x - p1.x) / 2;
+        int wherey = y - (p2.y - p1.y) / 2;
+        p1.x = wherex;
+        p1.y = wherey;
+        p2.x = wherex + width;
+        p2.y = wherey + height;
+    }
+}
+
 int main(int argc, char *argv[])
 {
   namespace fs = std::filesystem;
-  
+ 
   cv::Mat frame;
   double fps = 30;
   const char win_name[] = "Live Video...";
@@ -70,15 +95,16 @@ int main(int argc, char *argv[])
   //std::cout << "\nPredicted class = " << predictedLabel << '\n';
   
   
-  cv::Point p1(260, 180);
-  cv::Point p2(260+184, 180+224);
+  
   cv::namedWindow(win_name);
+  setMouseCallback(win_name, onMouse, nullptr);
   while (1) {
       
       
       vid_in >> frame;
-      Mat roi(frame,Rect(260, 180, 184, 224));
       rectangle(frame, p1, p2, Scalar(0, 255, 0));
+      Rect rectangle(p1.x, p1.y, width, height);
+      Mat roi(frame,rectangle);
       //int predictedLabel = model->predict(roi);
     //  std::cout << "\nPredicted class = " << predictedLabel << '\n';
       Mat greyroi;
