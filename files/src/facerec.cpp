@@ -15,7 +15,7 @@ int height = 224;
 
 cv::Point p1(0,0);
 cv::Point p2(width,height);
-
+cv::Point txtp(100, 100);
 bool dragOn = false;
 void onMouse(int event,int x,int y, int,void*) 
 {
@@ -111,8 +111,14 @@ int main(int argc, char *argv[])
       cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
       Mat resized;
       resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
-      int predictedLabel = model->predict(resized);
-      std::cout << "face is predicted to be from folder....." << predictedLabel << "\n"<<std::endl;
+      int predictedLabel;
+      double predictedconfidence;
+      model->predict(resized,predictedLabel,predictedconfidence);
+      std::string s = std::to_string(predictedLabel);
+      std::string s2 = std::to_string(predictedconfidence);
+      cv::putText(frame,"folder: " + s,txtp,cv::FONT_HERSHEY_COMPLEX_SMALL,1,CV_RGB(0,0,255),2);
+      cv::putText(frame, "confidence: " + s2, txtp + Point(0,15), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, CV_RGB(0, 0, 255), 2);
+     // std::cout << "face is predicted to be from folder....." << predictedLabel << "\n"<<std::endl;
      // std::cout << "\nPredicted class = " << predictedLabel << '\n';
       //cv::flip(frame, flippedimage,1);
       imshow(win_name, frame);
