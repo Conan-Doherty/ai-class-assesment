@@ -105,12 +105,13 @@ int main(int argc, char *argv[])
       rectangle(frame, p1, p2, Scalar(0, 255, 0));
       Rect rectangle(p1.x, p1.y, width, height);
       Mat roi(frame,rectangle);
+      
       //int predictedLabel = model->predict(roi);
     //  std::cout << "\nPredicted class = " << predictedLabel << '\n';
       Mat greyroi;
       cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
+     // greyroi.copyTo(frame);
       Mat resized;
-      string yesnt;
       resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
       int predictedLabel;
       double predictedconfidence;
