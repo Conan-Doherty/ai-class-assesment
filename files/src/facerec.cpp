@@ -110,10 +110,14 @@ int main(int argc, char *argv[])
       Mat greyroi;
       cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
       Mat resized;
+      string yesnt;
       resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
       int predictedLabel;
       double predictedconfidence;
       model->predict(resized,predictedLabel,predictedconfidence);
+      if (predictedLabel == 41 || predictedLabel == 42 || predictedLabel == 43) {
+          std::cout << "group member face found" << std::endl;
+      }
       std::string s = std::to_string(predictedLabel);
       std::string s2 = std::to_string(predictedconfidence);
       cv::putText(frame,"folder: " + s,txtp,cv::FONT_HERSHEY_COMPLEX_SMALL,1,CV_RGB(0,0,255),2);
