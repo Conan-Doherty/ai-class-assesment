@@ -13,11 +13,11 @@ using namespace std;
 int width = 184;
 int height = 224;
 
-cv::Point p1(0,0);
-cv::Point p2(width,height);
-cv::Point txtp(100, 100);
+cv::Point p1(0,0);//where does the rectangle start at
+cv::Point p2(width,height);//stores width and height values for rect
+cv::Point txtp(100, 100);//where text goes in window
 bool dragOn = false;
-void onMouse(int event,int x,int y, int,void*) 
+void onMouse(int event,int x,int y, int,void*) //detects mouse drag and moves rectangle to it
 {
     if (event == EVENT_LBUTTONDOWN) {
         dragOn = true;
@@ -75,58 +75,36 @@ int main(int argc, char *argv[])
       }
     }
   }
-  /*
-  // Randomly choose an image, and remove it from the main collection
-  std::srand(std::time(0));
-  int rand_image_id = std::rand() % images.size();
-  cv::Mat testSample = images[rand_image_id];
-  int     testLabel  = labels[rand_image_id];
-  images.erase(images.begin() + rand_image_id);
-  labels.erase(labels.begin() + rand_image_id);
-  std::cout << "Actual class    = " << testLabel << '\n';
-  std::cout << " training...";
-  */
-
+  
   cv::Ptr<cv::face::BasicFaceRecognizer> model = cv::face::EigenFaceRecognizer::create();
   model->train(images, labels);
 
-
-  //int predictedLabel = model->predict(testSample);
-  //std::cout << "\nPredicted class = " << predictedLabel << '\n';
-  
-  
-  
   cv::namedWindow(win_name);
   setMouseCallback(win_name, onMouse, nullptr);
   while (1) {
       
       
-      vid_in >> frame;
-      rectangle(frame, p1, p2, Scalar(128, 128, 128,90));
-      Rect rectangle(p1.x, p1.y, width, height);
-      Mat roi(frame,rectangle);
-      
-
-      //int predictedLabel = model->predict(roi);
-    //  std::cout << "\nPredicted class = " << predictedLabel << '\n';
-      Mat greyroi;
-      cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
-      cv::cvtColor(greyroi, roi, cv::COLOR_GRAY2BGR);
-      Mat resized;
-      resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
-      int predictedLabel;
-      double predictedconfidence;
-      model->predict(resized,predictedLabel,predictedconfidence);
-      if (predictedLabel == 41 || predictedLabel == 42 || predictedLabel == 43) {
+      vid_in >> frame;//video aquired
+      rectangle(frame, p1, p2, Scalar(128, 128, 128,90));//draws rectangle on window
+      Rect rectangle(p1.x, p1.y, width, height);//used as a coordinate for mats
+      Mat roi(frame,rectangle);//grabs the coords and makes a mat
+      Mat greyroi;//used to grayscale before sending to predict
+      cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);//used for the predict
+      cv::cvtColor(greyroi, roi, cv::COLOR_GRAY2BGR);//used for the effect display
+      Mat resized;//used to store the resized image to send to predict
+      resize(greyroi, resized, Size(92, 112), INTER_LINEAR);//resized the image and sends it to previous mat
+      int predictedLabel;//int used to store what folder the prediction thinks it is
+      double predictedconfidence;// double used to store the predicitons confidence
+      model->predict(resized,predictedLabel,predictedconfidence);//predictor constructor
+      if (predictedLabel == 41 || predictedLabel == 42 || predictedLabel == 43) // checks if the system thinks it is one of the team
+      {
           std::cout << "group member face found" << std::endl;
       }
-      std::string s = std::to_string(predictedLabel);
-      std::string s2 = std::to_string(predictedconfidence);
-      cv::putText(frame,"folder: " + s,txtp,cv::FONT_HERSHEY_COMPLEX_SMALL,1,CV_RGB(0,0,255),2);
-      cv::putText(frame, "confidence: " + s2, txtp + Point(0,15), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, CV_RGB(0, 0, 255), 2);
-     // std::cout << "face is predicted to be from folder....." << predictedLabel << "\n"<<std::endl;
-     // std::cout << "\nPredicted class = " << predictedLabel << '\n';
-      //cv::flip(frame, flippedimage,1);
+      std::string s = std::to_string(predictedLabel);//sending to string for display
+      std::string s2 = std::to_string(predictedconfidence);//sending to string for display
+      cv::putText(frame,"folder: " + s,txtp,cv::FONT_HERSHEY_COMPLEX_SMALL,1,CV_RGB(0,0,255),2);//displays which folder it thinks
+      cv::putText(frame, "confidence: " + s2, txtp + Point(0,15), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, CV_RGB(0, 0, 255), 2);//displays confidence in prediction
+      
 
       
 
