@@ -102,15 +102,16 @@ int main(int argc, char *argv[])
       
       
       vid_in >> frame;
-      rectangle(frame, p1, p2, Scalar(0, 255, 0));
+      rectangle(frame, p1, p2, Scalar(128, 128, 128,90));
       Rect rectangle(p1.x, p1.y, width, height);
       Mat roi(frame,rectangle);
       
+
       //int predictedLabel = model->predict(roi);
     //  std::cout << "\nPredicted class = " << predictedLabel << '\n';
       Mat greyroi;
       cv::cvtColor(roi, greyroi, cv::COLOR_BGR2GRAY);
-     // greyroi.copyTo(frame);
+      cv::cvtColor(greyroi, roi, cv::COLOR_GRAY2BGR);
       Mat resized;
       resize(greyroi, resized, Size(92, 112), INTER_LINEAR);
       int predictedLabel;
@@ -126,6 +127,9 @@ int main(int argc, char *argv[])
      // std::cout << "face is predicted to be from folder....." << predictedLabel << "\n"<<std::endl;
      // std::cout << "\nPredicted class = " << predictedLabel << '\n';
       //cv::flip(frame, flippedimage,1);
+
+      
+
       imshow(win_name, frame);
       if (cv::waitKey(60 / fps) >= 0) // how long to wait for a key (milliseconds)
           break;
